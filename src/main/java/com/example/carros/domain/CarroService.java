@@ -29,36 +29,39 @@ public class CarroService {
         return rep.save(carro);
     }
 
-//    public Carro insert(Carro carro) {
-//        Assert.isNull(carro.getId(), "nao foi possivel inserir o registro");
-//
-//        return rep.save(carro);
-//    }
-//
-//    public Carro update(Carro carro, Long id) {
-//        Assert.notNull(id, "nao foi possivel atualizar o registro");
-//
-//        //busca o carro no banco de dadoss
-//        Optional<CarroDTO> optional = getCarroById(id);
-//        if(optional.isPresent()){
-//            Carro db = optional.get();
-//            db.setNome(carro.getNome());
-//            db.setTipo(carro.getTipo());
-//            System.out.println("Carro id " + db.getId());
-//
-//            //atualiza o carro
-//            rep.save(db);
-//
-//            return db;
-//        } else{
-//            throw new RuntimeException("Nao foi possivel atualizar o registro");
-//        }
-//    }
+    public CarroDTO insert(Carro carro) {
+        Assert.isNull(carro.getId(), "nao foi possivel inserir o registro");
 
-    public void delete(Long id) {
+        return CarroDTO.create(rep.save(carro));
+    }
+//
+    public CarroDTO update(Carro carro, Long id) {
+        Assert.notNull(id, "nao foi possivel atualizar o registro");
+
+        //busca o carro no banco de dadoss
+        Optional<Carro> optional = rep.findById(id);
+        if(optional.isPresent()){
+            Carro db = optional.get();
+            db.setNome(carro.getNome());
+            db.setTipo(carro.getTipo());
+            System.out.println("Carro id " + db.getId());
+
+            //atualiza o carro
+            rep.save(db);
+
+            return CarroDTO.create(db);
+        } else{
+                return null;
+//            throw new RuntimeException("Nao foi possivel atualizar o registro");
+        }
+    }
+
+    public boolean delete(Long id) {
         if(getCarroById(id).isPresent()){
             rep.deleteById(id);
+            return true;
         }
+        return false;
     }
 
 
